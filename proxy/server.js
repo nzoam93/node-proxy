@@ -32,7 +32,12 @@ app.get('/bird-sound', async (req, res) => {
     const data = await response.json();
 
     if (data.recordings && data.recordings.length > 0) {
-      const fileUrl = `https:${data.recordings[0].file}`;
+      let fileUrl = data.recordings[0].file;
+      console.log('fileurl', fileUrl);
+      console.log('data', data)
+      if (!fileUrl.startsWith('http')) {
+        fileUrl = `https:${fileUrl}`;
+      }
       return res.json({ url: fileUrl });
     } else {
       return res.status(404).json({ error: 'No recordings found' });
