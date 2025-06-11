@@ -28,19 +28,26 @@ app.get('/bird-sound', async (req, res) => {
   }
 
   try {
-    const response = await fetch(`https://www.xeno-canto.org/api/2/recordings?query=${encodeURIComponent(bird)}`);
+    // Build query with quality and type filters
+    const query = `${bird} q:A type:song`;
+    const apiUrl = `https://www.xeno-canto.org/api/2/recordings?query=${encodeURIComponent(query)}`;
+
+    const response = await fetch(apiUrl);
     const data = await response.json();
 
-    if (data.recordings && data.recordings.length > 0) {
-      let fileUrl = data.recordings[0].file;
-      console.log('fileurl', fileUrl);
-      console.log('data', data)
+    // Filter for recordings with 'A' quality and type 'song' just in case
+    const recordings = (data.recordings || []).filter(
+      r => r.q === 'A' && r.type === 'song'
+    );
+
+    if (recordings.length > 0) {
+      let fileUrl = recordings[0].file;
       if (!fileUrl.startsWith('http')) {
         fileUrl = `https:${fileUrl}`;
       }
       return res.json({ url: fileUrl });
     } else {
-      return res.status(404).json({ error: 'No recordings found' });
+      return res.status(404).json({ error: 'No high-quality bird song recordings found' });
     }
   } catch (error) {
     console.error('Error fetching bird sound:', error);
