@@ -7,7 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const ALLOWED_ORIGINS = [
-  "https://nzoam93.github.io/birdle-revamped/", // my app I am trying to access from
+  "https://nzoam93.github.io/birdle-revamped/", // my app I am trying to access from,
+  "https://nzoam93.github.io/",
   'http://127.0.0.1:5500'
 ];
 
